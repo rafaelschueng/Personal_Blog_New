@@ -1,0 +1,23 @@
+{
+  "tasks": {
+    "lume": "echo \"import 'lume/cli.ts'\" | deno run --unstable -A -",
+    "build": "deno task lume",
+    "serve": "deno task lume -s"
+  },
+  "imports": {
+    "lume/": "https://deno.land/x/lume@v1.18.0/",
+    "site/": "./src/",
+    "site/assets/": "./src/assets/",
+    "site/components/": "./src/_components/",
+    "preferences/": "./preferences/",
+    "react/types": "npm:@types/react"
+  },
+  "fmt": {
+    "indentWidth": 2,
+    "lineWidth": 120
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "npm:react"
+  }
+}

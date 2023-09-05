@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"name": "rafaelschueng.github.io",
+			"path": "."
+		}
+	],
+	"settings": {
+		"deno.enable": true,
+		"deno.config": "./deno.json",
+		"deno.codeLens.implementations": true,
+		"deno.unstable": true,
+		"deno.lint": true,
+		"deno.suggest.autoImports": true
+	}
+}

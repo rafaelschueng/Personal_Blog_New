@@ -1,0 +1,29 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Lume as server and watch.",
+      "type": "shell",
+      "command": "deno task lume --serve",
+      "detail": "Will start the Lume server and watch the changes in the source code and restart it!",
+      "presentation": {
+        "focus": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build the site",
+      "type": "shell",
+      "command": "deno task lume",
+      "detail": "will build the project!",
+      "presentation": {
+        "close": true,
+        "showReuseMessage": false,
+        "clear": true
+      }
+    }
+  ]
+}
