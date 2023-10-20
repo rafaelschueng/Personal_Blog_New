@@ -1,19 +1,11 @@
 const preferences = {
-    src: "./src/",
-    dest: `./build/`,
-    dev: true,
-    includes: "./includes/",
+    src: './src/',
+    dest: './build/',
     emptyDest: true,
-    location: new URL("https://rafaelschueng.github.io/"),
+    location: new URL('https://rafaelschueng.github.io/'),
     server: {
       port: 5000,
-      open: true,
-      page404: "./src/static/not_found.html",
-    },
-    prettyUrls: true,
-    watcher: {
-      debounce: 1000,
-      ignore: [],
+      page404: './src/static/not_found.html',
     },
   };
 

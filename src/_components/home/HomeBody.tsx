@@ -1,52 +1,29 @@
-import type { } from 'react/types';
+import type { } from "react/types";
+import TredingBlogPosts from "./TrendingBlogPosts.tsx";
 
-import BlogColumn from './BlogColumn.tsx';
-import ProjectsColumn from './ProjectsColumn.tsx';
-import AboutColumn from './AboutColumn.tsx';
-
-import ProfileImage from './ProfileImage.tsx';
-
-const logoImg = './assets/global/logo_wide.svg'
-
-const HomeBody = () => (
-  <body>
-    <div className='container-fluid'>
-      <div className='row vh-100 subcontainer'>
-        <div className='col-2 first-column'>
-          <div className='logo'>
-            <img src={logoImg} alt="This is my logo" />
+export default function () {
+  return (
+    <body>
+      <div className="container-grid g-0 vh-100">
+        <div className="row g-0 vh-100">
+          <div className="col main">
+            <h1 className="header">Hello!</h1>
+            <div className="description">
+              Description
+            </div>
+            <div className="footer">
+              <ul>
+                <li><a href="/about">About</a></li>
+                <li><a href="/blog">Blog</a></li>
+                <li><a href="/linkedin">LinkedIn</a></li>
+              </ul>
+            </div>
           </div>
-        </div>
-        <div className='col presentation-column'>
-          <div className='navigation text-center'>
-
-            <div className='navigation-option'>
-              <nav>
-                <a href='/blog' className='blog'>Blog</a>
-              </nav>
-            </div>
-
-            <div className='navigation-option'>
-              <nav>
-                <a href='https://github.com/rafaelschueng/' className='github'>Projects</a>
-              </nav>
-            </div>
-
-            <div className='navigation-option'>
-              <nav>
-                <a href='/about' className='about'>About</a>
-              </nav>
-            </div>
-
-          </div>
-
-          <div className='message'>
-            <h1>A Brazilian Software Engineer living in São Paulo.</h1>
+          <div className="col preview">
+            <TredingBlogPosts/>
           </div>
         </div>
       </div>
-    </div>
-  </body>
-);
-
-export default HomeBody;
+    </body>
+  )
+}
