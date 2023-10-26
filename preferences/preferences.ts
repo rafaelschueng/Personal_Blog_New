@@ -5,7 +5,7 @@ const preferences = {
     location: new URL('https://rafaelschueng.github.io/'),
     server: {
       port: 5000,
-      page404: './src/static/not_found.html',
+      page404: './build/static/not_found.html',
     },
   };
 

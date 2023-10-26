@@ -8,6 +8,7 @@ const site = lume(preferences);
 site.use(jsx());
 site.use(mdx());
 site.copy("./assets", './assets')
+site.copy("./static", './static')
 
 export default site;
 

@@ -11,10 +11,14 @@
     --darker-gray-color:#6C757D;
 }
 
+html {
+    background-color: var(--white-bg-color);
+}
+
 body * {
     font-family: 'Titillium Web', sans-serif;
     color: var(--black-bg-color);
-    background-color: var(--white-bg-color);
+    
 }
 
 .main {
@@ -32,7 +36,22 @@ body * {
 .header {
     margin: 0;
     font-size: 3rem;
+    font-weight: 600;
+}
+
+.header h1 {
+    padding: 0;
+    font-size: 5rem;
     font-weight: 900;
+}
+
+.avatar {
+    object-fit: cover;
+    margin: 0 auto;
+    width: 10rem;
+    height: 10rem;
+    object-position: top center;
+    border-radius: 100%;
 }
 
 .description {
@@ -46,9 +65,16 @@ body * {
 }
 
 .footer ul { 
+    width: 100%;
+    display: inline-flex;
     list-style: none;
     padding: 0;
     margin: 0;
+}
+
+.footer ul li {
+    margin: 0 auto;
+    padding: 0 1rem;
 }
 
 .footer ul li a {
@@ -57,44 +83,46 @@ body * {
     color: var(--bs-body-color);
 }
 
-.footer ul li a:hover {
-    padding-left: 10px;
-}
-
 .preview {
     display: grid;
+    max-height: 100%;
+    grid-template-rows: min-content;
+    align-content: center;
     container-name: preview;
     container-type: size;
 }
 
-@keyframes image-nomal-to-greyscale {
-    from { filter: grayscale(0%); }
-    to { filter: grayscale(70%);}
+.preview a {
+    text-decoration: none;
+    color:inherit;
 }
 
-.preview img {
-    margin: 0 auto;
-    align-self: center;
-    max-height: 100vh;
-    object-fit: cover;
-    width: 100%;
-    padding: 1rem 0;
-    animation-name: image-nomal-to-greyscale ;
-    animation-duration: 0.5s;
-    animation-fill-mode: forwards;
-    overflow: hidden;
+.preview ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.preview ul li, .preview h4 {
+    margin: 0.5rem 0 0.5rem 0.5rem;
+    padding: 1rem 0 1rem 1rem;
+    border-radius: 0.2rem;
     transition: 0.5s all ease-in-out;
 }
 
-@keyframes image-greyscale-to-normal {
-    from { filter: grayscale(50%); }
-    to { filter: grayscale(0%); }
+.preview ul li:hover {
+    background-color: var(--white-hover-color);
 }
 
-.preview img:hover {
-    animation-name: image-greyscale-to-normal;
-    animation-duration: 1s;
-    animation-fill-mode: forwards;
+.preview ul li h5 {
+    background-color: inherit;
+    transition: inherit;
+}
+
+.preview ul li span {
+    overflow: hidden;
+    background-color: inherit;
+    transition: inherit;
 }
 
 @container preview (height < 580px) or (width < 580px){

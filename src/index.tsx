@@ -1,18 +1,12 @@
-import GlobalHeaderTags from "site/components/global/HeaderTags.tsx";
-import HomeBody from "site/components/home/HomeBody.tsx";
 import type { } from "react/types";
 
-export const renderOrder = 1;
-export const title = 'Rafael Schueng'
-
-
-export default function () {
+export default function ({ comp }: any) {
   return (
     <html lang="en">
       <head>
-        <GlobalHeaderTags title='My new Blog!' />
+        <comp.global.GlobalHeaderTags title={'Rafael Schueng'} />
       </head>
-      <HomeBody />
+      <comp.home.HomeBody />
     </html>
   )
 };
