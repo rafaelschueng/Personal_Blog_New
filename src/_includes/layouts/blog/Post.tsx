@@ -1,9 +1,9 @@
 import type { } from "react/types";
 
-const Post = ({title, children}) => (
+const Post = ({title, children, comp}: any) => (
     <html lang="en">
         <head>
-            <title>{title}</title>
+            <comp.global.GlobalHeaderTags />
         </head>
         <body>
             {children}

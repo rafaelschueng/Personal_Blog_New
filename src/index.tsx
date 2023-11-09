@@ -5,6 +5,7 @@ export default function ({ comp }: any) {
     <html lang="en">
       <head>
         <comp.global.GlobalHeaderTags title={'Rafael Schueng'} />
+        <link href="/assets/home/styles/home.css" rel="stylesheet" />
       </head>
       <comp.home.HomeBody />
     </html>

@@ -1,0 +1,140 @@
+:root {
+    --white-bg-color: #F8F9FA;
+    --white-hover-color: #E9ECEF;
+    --platinum-hover-color: #DEE2E6;
+    --gray-hover-color: #CED4DA;
+    --gray-hover-color-alternative: #ADB5BD;
+    /*Reverse colors*/
+    --black-bg-color: #212529;
+    --black-hover-color: #343A40;
+    --black-hover-alternative-color: #495057;
+    --darker-gray-color: #6C757D;
+    /*light colors*/
+    --light-white-bg-color: #f8f9fae9;
+    --light-gray-hover-color: #ced4da40;
+}
+
+body {
+    background-color: var(--white-bg-color) !important;
+    font-family: 'Titillium Web', sans-serif;
+    color: var(--black-bg-color);
+
+}
+
+.posts {
+    min-height: 100vh;
+    overflow: auto;
+    container-name: posts;
+    container-type: size;
+}
+
+.posts > div {
+    display: grid;
+    padding: 0 1rem;
+    gap: 0.5rem;
+    grid-template-areas: 'header header';
+    grid-auto-columns: 50%;
+    grid-auto-rows: min-content;
+    
+}
+
+.posts h4 {
+    grid-area: header;
+    padding: 1rem;
+    margin: 0;
+}
+
+.blog-post-tiles {
+    border-radius: 0.2rem;
+    padding: 1rem;
+    background-color: var(--light-gray-hover-color);
+}
+
+.blog-post-tiles a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.blog-post-tiles span {
+    display: block;
+    margin: 1rem 0;
+}
+
+.blog-post-tiles small {
+    width: 100%;
+    display: inline-block;
+}
+
+.floating-cover {
+    display: grid;
+    align-content: end;
+    min-height: 100%;
+    container-name: floating-cover;
+    container-type: size;
+}
+
+.floating-cover h2 {
+    padding: 1rem;
+    margin: 0;
+    font-weight: 900;
+    color: var(--white-bg-color);
+    position: relative;
+    bottom: 0;
+    text-shadow: 1px 1px 2px var(--black-hover-color);
+}
+
+.floating-cover ul {
+    padding: 0;
+    margin: 0;
+    position: relative;
+    justify-content: center;
+    list-style: none;
+    margin: 0 0 1rem 0;
+    display: flex;
+}
+
+.floating-cover ul li {
+    padding: 0 1rem;
+}
+
+.floating-cover ul li a {
+    text-decoration: none;
+    color: var(--white-bg-color);
+    text-shadow: 1px 1px 2px var(--black-hover-color);
+}
+
+.avatar {
+    position: absolute;
+    width: 100%;
+    min-height: 100vh;
+    object-fit: cover;
+
+}
+
+.description {
+    position: relative;
+    bottom: 0;
+    background-color: var(--light-white-bg-color);
+    border-radius: 0.2rem;
+    padding: 1rem;
+    margin: 1rem;
+    font-size: 0.9rem;
+    transition: 0.5s all ease-in-out;
+}
+
+@container posts (width < 600px) {
+   .posts > div {
+    grid-template-areas: 'header';
+    grid-auto-columns: auto;
+    grid-auto-rows: min-content;
+   }
+}
+
+@container floating-cover (width < 350px) {
+    .floating-cover ul {
+        display: inline-block;
+    }
+    .description {
+        display: none;
+    }
+}
