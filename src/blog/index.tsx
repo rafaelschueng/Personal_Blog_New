@@ -29,7 +29,7 @@ export default function ({ comp }: any) {
             <div className='col-8 offset-4 posts'>
               <div>
                 <h4>✍🏻​ Postagens Recentes:</h4>
-                <comp.global.BlogPostsTiles datetime description />
+                <comp.blog.BlogPostsTiles datetime description />
               </div>
             </div>
           </div>

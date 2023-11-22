@@ -1,5 +1,6 @@
 const preferences = {
     src: './src/',
+    prettyUrls: true,
     dest: './build/',
     emptyDest: true,
     location: new URL('https://rafaelschueng.github.io/'),

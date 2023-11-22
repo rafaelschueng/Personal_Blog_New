@@ -10,7 +10,7 @@ interface ICustomProps {
 export default function (props: ICustomProps) {
     return (
         <>
-            <props.comp.global.Avatar animated />
+            <props.comp.global.Avatar />
             <div className="header text-center"><h2>👋 Olá, meu nome é</h2><h1>Rafael Schüng</h1></div>
             <div className="description">
                 Nos últimos 6 anos desenvolvo e mantenho sistemas que integram e processam dados do SalesForce utilizando JavaScript, Node.js, Loopback, PostgreSQL e Heroku.

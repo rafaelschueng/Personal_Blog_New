@@ -1,4 +1,4 @@
 {
     "deno.enable": true,
-    "svg.preview.background": "editor"
+    "svg.preview.background": "custom"
 }

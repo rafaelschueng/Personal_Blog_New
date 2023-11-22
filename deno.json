@@ -5,12 +5,13 @@
     "serve": "deno task lume -s"
   },
   "imports": {
-    "lume/": "https://deno.land/x/lume@v1.19.2/",
+    "lume/": "https://deno.land/x/lume@v1.19.3/",
     "site/": "./src/",
     "site/assets/": "./src/assets/",
     "site/components/": "./src/_components/",
     "preferences/": "./preferences/",
-    "react/types": "npm:@types/react"
+    "react/types": "npm:@types/react",
+    "node/magickwand": "npm:node-magickwand"
   },
   "fmt": {
     "indentWidth": 2,

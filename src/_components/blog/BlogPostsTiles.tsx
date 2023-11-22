@@ -9,7 +9,7 @@ interface IBlogPostsProperties {
 }
 
 export default function (props: IBlogPostsProperties) {
-  const posts = props.search.pages('blog', '', parseInt(props?.posts));
+  const posts = props.search.pages('post', '', parseInt(props?.posts));
   if (!posts.length) return (<span> No new posts </span>)
   return (
     <>
@@ -19,7 +19,7 @@ export default function (props: IBlogPostsProperties) {
             <a href={post.data.url}>
               <h5>🔗 {post.data.title}</h5>
               {(props.description) ? <span>{post.data.description}</span>: <></>}
-              {(props.datetime) ? <small className="text-end">📅 {post.data.datetime}</small> : <></>}
+              {(props.datetime) ? <small className="text-end">📅 {new Date(post.data.date).toLocaleDateString()}</small> : <></>}
             </a>
           </div>
         ))
