@@ -6,16 +6,14 @@
     "configurations": [
         {
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch Scripts",
             "type": "node",
-            "program": "${workspaceFolder}/_config.ts",
+            "program": "${workspaceFolder}/src/scripts/main.ts",
             "cwd": "${workspaceFolder}",
             "runtimeExecutable": "C:\\Users\\rafae\\.deno\\bin\\deno.exe",
             "runtimeArgs": [
                 "run",
                 "--unstable",
-                "--config",
-                "./deno.json",
                 "--inspect-wait",
                 "--allow-all"
             ],

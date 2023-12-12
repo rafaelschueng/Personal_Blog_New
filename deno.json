@@ -11,7 +11,7 @@
     "site/components/": "./src/_components/",
     "preferences/": "./preferences/",
     "react/types": "npm:@types/react",
-    "node/magickwand": "npm:node-magickwand"
+    "node/wasm-imagemagick": "npm:wasm-imagemagick"
   },
   "fmt": {
     "indentWidth": 2,
@@ -20,5 +20,6 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "npm:react"
-  }
+  },
+  "nodeModulesDir": false
 }
