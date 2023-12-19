@@ -1,4 +1,4 @@
-import { FindByName } from "./FindFiles.ts";
+import { FindByName } from "./Find.ts";
 import { ExecCommandAsync } from "./Commands.ts";
 
 export async function Dependencies() {
