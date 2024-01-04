@@ -1,5 +1,5 @@
-import { OptimizeImages } from './Optimize.ts'
+import { OptimizeAllImages } from './Optimize.ts'
 
 (async () => {
-  await OptimizeImages();
+  await OptimizeAllImages('raw', `${Deno.cwd()}/testing`);
 })();

@@ -1,5 +1,6 @@
-import { FindByName } from "./Find.ts";
+import { Entries, FindByName } from "./Find.ts";
 import { ExecCommandAsync } from "./Commands.ts";
+import { AppendDirectories, BasePath } from "site/scripts/Utils.ts";
 
 export async function Dependencies() {
   console.log("Verifiying all dependencies for imagemagick!");
@@ -46,4 +47,20 @@ export async function Info(path: string) {
 export async function Convert(inputImage: string, outputImage: string) {
   const imagemagick = await ImageMagick();
   const command = await ExecCommandAsync(imagemagick.path, ['convert', inputImage, '-auto-orient', outputImage])
+  console.log(command)
+}
+
+type ProcessingPlaining = {
+  path: string;
+  destinations: Array<string | URL>
+}
+
+export async function ConvertAll(images: Array<string | Entries>) {
+  const folderSizes: string[] = ['small', 'medium', 'large']
+  const plaining: Array<ProcessingPlaining> = images.map(image => {
+    const path = (image as Entries)?.path.pathname ?? image;
+    const destination = folderSizes.map(size => AppendDirectories(BasePath(path), size))
+    return {path: path, destinations: destination}
+  })
+  console.log(plaining);
 }

@@ -1,11 +1,9 @@
-import { FindImages } from './Find.ts'
+import { PreserveFiles } from "site/scripts/Backup.ts";
+import { FindAllImages } from "./Find.ts";
+import { ConvertAll } from "site/scripts/ImageMagick.ts";
 
-export async function OptimizeImages () {
-    const images = await FindImages();
-    const assets = images.filter(image => image.path.toString().includes('asset'))
-
-    /*
-        make all raw folder to preserve original images, move original image to raw path
-        and scale images in 3 sizes like 100%, 66% and 33% outside of raw images paths.
-    */ 
-} 
+export async function OptimizeAllImages(backupDirectory: string, workspace?: string | URL) {
+  let images = await FindAllImages(workspace);
+  ConvertAll(images)
+  PreserveFiles(images, backupDirectory);
+}
