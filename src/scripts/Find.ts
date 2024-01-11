@@ -21,7 +21,7 @@ export async function WalkBetweenDirectoriesAsync(workspace: string | URL = Deno
 
 export function WalkBetweenDirectoriesSync(workspace: string = Deno.cwd()): Array<Entries> {
   const result: Array<Entries> = [];
-  const wanderer = async (workspace: string, result: Array<Entries>) => {
+  const wanderer = (workspace: string, result: Array<Entries>) => {
     for (const entry of Deno.readDirSync(workspace)) {
       const mustSave = entry.isFile && !entry.name.startsWith(`.`);
       if (mustSave) result.push({ ...entry, path: new URL(`file://${workspace}\\${entry.name}`) });

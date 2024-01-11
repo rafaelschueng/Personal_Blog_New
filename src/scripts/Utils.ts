@@ -1,3 +1,5 @@
+import { existsSync } from "deno/fs/exists.ts";
+
 const StartsWithPoint = (path: string) => path.startsWith(".");
 const StartsWithSlash = (path: string) => path.startsWith("/");
 const StartsWithSlashPoint = (path: string) => path.startsWith("./");
@@ -33,6 +35,23 @@ export function AddPointSlash(directory: string | URL) {
   return _directory;
 }
 
+export function MakeDirectory(workspace: string | URL, path: string | URL) {
+  const _workspace = (workspace as URL)?.pathname ?? workspace;
+  const _path = (path as URL)?.pathname ?? path;
+  const _newDirectory = AppendDirectories(_workspace, _path);
+  if (!existsSync(_newDirectory)) {
+    console.log(`Creating a new directory: ${_newDirectory}!`);
+    Deno.mkdirSync(_newDirectory);
+    return _newDirectory;
+  }
+  console.error(new Error(`The directory: ${_newDirectory} already exists!`));
+  return _newDirectory;
+}
+
+export function FilenameFromPath (path:string | URL) {
+  const _filename = (path as URL)?.pathname;
+}
+
 export function BasePath(directory: string | URL) {
   let path: string = "";
   if (directory instanceof URL) path = directory?.pathname;
@@ -54,11 +73,11 @@ export function AppendDirectories(path: string | URL, toBeAppended: string | Arr
     _path = _path.split("/");
     if (typeof toBeAppended === "string") _path.push(toBeAppended);
     if (Array.isArray(toBeAppended)) _path.push(...toBeAppended);
-    return new URL(`file:///${_path.join("/")}`);
+    return new URL(`file:///${_path.join("/")}/`);
   }
 
   let _path = path.split("/");
   if (typeof toBeAppended === "string") _path.push(toBeAppended);
   if (Array.isArray(toBeAppended)) _path.push(...toBeAppended);
-  return _path.join('/');
+  return _path.join('/').concat('/');
 }

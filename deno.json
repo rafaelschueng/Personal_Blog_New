@@ -11,8 +11,7 @@
     "site/assets/": "./src/assets/",
     "site/components/": "./src/_components/",
     "preferences/": "./preferences/",
-    "react/types": "npm:@types/react",
-    "node/wasm-imagemagick": "npm:wasm-imagemagick"
+    "react/types": "npm:@types/react"
   },
   "fmt": {
     "indentWidth": 2,
@@ -22,5 +21,6 @@
     "jsx": "react-jsx",
     "jsxImportSource": "npm:react"
   },
+  "lock":false,
   "nodeModulesDir": false
 }
