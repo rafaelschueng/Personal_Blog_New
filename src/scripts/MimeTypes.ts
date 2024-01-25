@@ -16,7 +16,6 @@ export function ImageMimeTypes(): Array<MimeType> {
 
 export function ImageTypes(): Array<string> {
   let mimetypes: Array<MimeType> | Array<string> = FetchMimetypes();
-
   mimetypes = mimetypes
     .filter((mimetype) => mimetype.name.startsWith("image"))
     .map((mimetype) => mimetype.types).flat();

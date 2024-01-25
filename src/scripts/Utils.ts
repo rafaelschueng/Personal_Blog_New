@@ -1,4 +1,7 @@
 import { existsSync } from "deno/fs/exists.ts";
+import { crypto } from "deno/crypto/mod.ts";
+import { ImageLookupItem } from "site/scripts/types/ImageLookupItem.ts";
+import { encodeHex } from "deno/encoding/hex.ts";
 
 const StartsWithPoint = (path: string) => path.startsWith(".");
 const StartsWithSlash = (path: string) => path.startsWith("/");
@@ -53,7 +56,7 @@ export function FilenameFromPath (path:string | URL) {
 }
 
 export function BasePath(directory: string | URL) {
-  let path: string = "";
+  let path = "";
   if (directory instanceof URL) path = directory?.pathname;
   if (typeof directory === "string") path = directory as string;
 
@@ -80,4 +83,54 @@ export function AppendDirectories(path: string | URL, toBeAppended: string | Arr
   if (typeof toBeAppended === "string") _path.push(toBeAppended);
   if (Array.isArray(toBeAppended)) _path.push(...toBeAppended);
   return _path.join('/').concat('/');
+}
+
+
+export async function CreateHashFromFile (path: string | URL) {
+  const file = await Deno.open(path, {read: true})
+  const stream = file.readable;
+  const digest = await crypto.subtle.digest('MD5', stream)
+  return encodeHex(digest);
+}
+
+export function CreateHashFromString (data: string) {
+  const buffer = crypto.subtle.digestSync('MD5', new TextEncoder().encode(data));
+  const charsIntArray = Array.from(new Uint8Array(buffer));
+  return charsIntArray.map(char => char.toString(16).padStart(2, "0")).join('')
+}
+
+export function ObjectToString (object: Object) {
+  return JSON.stringify(object);
+}
+
+export function ObjectWanderer (object: any) {
+  const isObject = typeof object === 'object' && object?.constructor?.name === 'Object'
+  if (!isObject) throw new Error('The argument is not a object!');
+
+  let result: string = ''
+  const keys = Object.keys(object);
+
+  const wanderer = (object: any) => {
+    for (const key of Object.keys(object)) {
+      const value = object[key as keyof object]
+      const isArray = Array.isArray(value)
+      if(isArray){
+        result = (value.length)? result + `${key}:[${value.toString()}],`: result + `${key}:[],`;
+      }
+      const isObject = typeof value === 'object' && value?.constructor?.name === 'Object'
+      if(isObject){
+        result = result + `${key}:{` 
+        wanderer(value)
+        result = result + '},'
+      }
+      if (!isObject && !isArray) {
+        result = result + `${key}:${value},`
+      }
+    }
+  }
+
+  wanderer(object);
+  result = `{${result}}`
+  result = result.replaceAll(',}', "}")
+  return result
 }

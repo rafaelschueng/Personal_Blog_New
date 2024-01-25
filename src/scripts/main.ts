@@ -1,5 +1,8 @@
 import { OptimizeAllImages } from './Optimize.ts'
+import { FindAllImages } from 'scripts/Find.ts'
+import { RegisterAllImages } from "./Register.ts"
 
 (async () => {
-  await OptimizeAllImages('raw', `${Deno.cwd()}/testing`);
-})();
+  const images = await FindAllImages(`${Deno.cwd()}/testing`)
+  await RegisterAllImages(images)
+})()

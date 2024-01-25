@@ -79,7 +79,7 @@ function FilterPerImageMimeType (paths: Array<any>): Array<Entries> {
   return data;
 }
 
-export async function FindAllImages(workspace:string | URL = Deno.cwd()) {
+export async function FindAllImages(workspace:string | URL = Deno.cwd()): Promise<Entries[]> {
   let files: Array<Entries> = await WalkBetweenDirectoriesAsync(workspace);
   files = files.filter((file) => file.isFile && !file.path.toString().includes("build"));
   const images = FilterPerImageMimeType(files);
