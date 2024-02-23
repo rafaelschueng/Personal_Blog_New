@@ -2,19 +2,18 @@ import { ImageTypes } from "site/scripts/MimeTypes.ts";
 
 export type Entries = Deno.DirEntry & { path: URL };
 
-export async function WalkBetweenDirectoriesAsync(workspace: string | URL = Deno.cwd()): Promise<Array<Entries>> {
+export async function WalkBetweenDirectoriesAsync(workspace: URL): Promise<Array<Entries>> {
   const result: Array<Entries> = [];
-  const wanderer = async (workspace: string | URL, result: Array<Entries>) => {
+  const wanderer = async (workspace: URL, result: Array<Entries>) => {
     for await (const entry of Deno.readDir(workspace)) {
-      if (entry.isFile) result.push({ ...entry, path: new URL(`file://${workspace}\\${entry.name}`) });
+      if (entry.isFile) result.push({ ...entry, path: new URL(`${workspace}\\${entry.name}`) }); 
       const mustEnter = entry.isDirectory && !entry.name.startsWith(`.`);
       if (mustEnter) {
-        result.push({ ...entry, path: new URL(`file://${workspace}\\${entry.name}`) });
-        await wanderer(`${workspace}\\${entry.name}`, result);
+        result.push({ ...entry, path: new URL(`${workspace}\\${entry.name}`) });
+        await wanderer(new URL(`${workspace}\\${entry.name}`), result);
       }
     }
   };
-  const _workspace = (workspace as URL)?.pathname ?? workspace
   await wanderer(workspace, result);
   return result;
 }
@@ -32,6 +31,8 @@ export function WalkBetweenDirectoriesSync(workspace: string = Deno.cwd()): Arra
       }
     }
   };
+
+  // change to consider href instead of pathname
   wanderer(workspace, result);
   return result;
 }
@@ -79,14 +80,14 @@ function FilterPerImageMimeType (paths: Array<any>): Array<Entries> {
   return data;
 }
 
-export async function FindAllImages(workspace:string | URL = Deno.cwd()): Promise<Entries[]> {
+export async function FindAllImages(workspace:URL): Promise<Entries[]> {
   let files: Array<Entries> = await WalkBetweenDirectoriesAsync(workspace);
   files = files.filter((file) => file.isFile && !file.path.toString().includes("build"));
   const images = FilterPerImageMimeType(files);
   return images;
 }
 
-export async function FindImages(workspace: string) {
+export async function FindImages(workspace: URL) {
   let files = await WalkBetweenDirectoriesAsync(workspace);
   files = files.filter((file) => file.isFile && !file.path.toString().includes("build"));
   const images = FilterPerImageMimeType(files);

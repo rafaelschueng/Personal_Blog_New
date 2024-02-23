@@ -6,7 +6,7 @@
   },
   "imports": {
     "lume/": "https://deno.land/x/lume@v1.19.3/",
-    "deno/": "https://deno.land/std@0.209.0/",
+    "deno/": "https://deno.land/std@0.213.0/",
     "scripts/": "./src/scripts/",
     "site/": "./src/",
     "site/assets/": "./src/assets/",

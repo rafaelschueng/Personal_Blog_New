@@ -4,5 +4,47 @@
         "path": "/testing/images/logos/favicon.png",
         "md5": "426c40997d2fdb89f6b7b1a16a9b0200",
         "conversions": []
+    },
+    {
+        "name": "personal logo invory.svg",
+        "path": "/testing/images/logos/personal%20logo%20invory.svg",
+        "md5": "41597884c783bfdd76232ad67c88947c",
+        "conversions": []
+    },
+    {
+        "name": "personal logo optimized.svg",
+        "path": "/testing/images/logos/personal%20logo%20optimized.svg",
+        "md5": "cf4b848a14f2fc6aab98a09347dbb25a",
+        "conversions": []
+    },
+    {
+        "name": "personal logo wide.svg",
+        "path": "/testing/images/logos/personal%20logo%20wide.svg",
+        "md5": "d0eb673a5cd5bc1e5913941901ba0777",
+        "conversions": []
+    },
+    {
+        "name": "personal logo.svg",
+        "path": "/testing/images/logos/personal%20logo.svg",
+        "md5": "f52c26798bfb926ccea70baa184c0dc8",
+        "conversions": []
+    },
+    {
+        "name": "personal_logo_wide_optimized.svg",
+        "path": "/testing/images/logos/personal_logo_wide_optimized.svg",
+        "md5": "9c4f80c5dcfe5c500fb13236e85f6fce",
+        "conversions": []
+    },
+    {
+        "name": "profile.jpg",
+        "path": "/testing/images/profile/profile.jpg",
+        "md5": "5da3955a21abfcd899c80d10b2066c98",
+        "conversions": []
+    },
+    {
+        "name": "profile_animated.gif",
+        "path": "/testing/images/profile/profile_animated.gif",
+        "md5": "4b5293dfbb8fdf813c97657939bc3d8a",
+        "conversions": []
     }
 ]

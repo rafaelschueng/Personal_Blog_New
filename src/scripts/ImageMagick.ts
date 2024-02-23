@@ -1,6 +1,6 @@
 import { Entries, FindByName } from "./Find.ts";
 import { ExecCommandAsync } from "./Commands.ts";
-import { BasePath, MakeDirectory } from "site/scripts/Utils.ts";
+import { BasePath, MakeDirectory, AppendDirectories } from "site/scripts/Utils.ts";
 import { existsSync } from "deno/fs/mod.ts";
 
 export async function Dependencies() {
@@ -40,24 +40,25 @@ export async function Info(path: string) {
 }
 
 //TODO: finish this function
-export async function Convert(inputImage: string, outputImage: string) {
+export async function Convert(inputImage: URL, outputImage: URL) {
   const imagemagick = await ImageMagick();
   console.log(`Converting ${inputImage} to ${outputImage}`);
-  const command = await ExecCommandAsync(imagemagick.path, ["convert", inputImage, "-auto-orient", outputImage]);
+  const command = await ExecCommandAsync(imagemagick.path, ["convert", inputImage.href, "-auto-orient", outputImage.href]);
   console.log(command);
 }
 
-export function ChangeMimeType(file: string | URL, mimetype: string): string {
+export function ChangeMimeType(file: string, mimetype: string): string {
   if (!mimetype.startsWith(".")) throw new Error("Mimetype argument not starts with dot!");
-  const _file = (file as URL)?.pathname ?? file;
+  const _file = file;
   const pattern = /\.\w{3,5}$|\.\w{3,5}\/$/g;
   if (!pattern.test(_file)) throw new Error(`The ${file} is not a complete path of file!`);
-  return _file.replace(pattern, mimetype);
+  const result = _file.replace(pattern, mimetype);
+  return result
 }
 
-function GenerateOutputFiles(path: string, destinations: Array<string | URL>, mimetypes: Array<string>) {
+function GenerateOutputFiles(path: URL, destinations: Array<URL>, mimetypes: Array<string>) {
   const newFiles = destinations.map((directory) => {
-    const _$ = path.split("/");
+    const _$ = path.href.split("/");
     const name = _$[_$.length - 1];
     const file = (directory as URL)?.pathname?.concat(name) ?? directory.toString().concat(name);
     return mimetypes.map((mimetype) => ChangeMimeType(file, mimetype));
@@ -66,8 +67,8 @@ function GenerateOutputFiles(path: string, destinations: Array<string | URL>, mi
   return newFiles;
 }
 
-function GenerateOutputPaths(path: string, sizes: Array<string>) {
-  const newDestionations = sizes.map((size) => MakeDirectory(BasePath(path), size));
+function GenerateOutputPaths(paths: Array<URL>) {
+  const newDestionations = paths.map((path) => MakeDirectory(path));
   return newDestionations;
 }
 
@@ -93,22 +94,23 @@ function ValidateFileCreation(files: Array<string>) {
   }
 }
 
+
 // add capability to avoid replicate /small inside /small again and etc...
-function Prepare(path: string) {
+function Prepare(path: URL): URL[] {
   const mimetypes = [".webp", ".avif"];
-  const sizes: string[] = ["small", "medium", "large"];
-  const canConvertFile = ConversionPreviouslyExists(path, sizes);
-  if (canConvertFile) return [];
-  const output = GenerateOutputPaths(path, sizes);
-  let files = GenerateOutputFiles(path, output, mimetypes);
-  files = ValidateFileCreation(files);
+  const sizedDirectories = ["small", "medium", "large"].map(size => new URL(`file:${path.href}/${size}`))
+  //will be removed!
+  const backupDirectories = sizedDirectories.map(size => AppendDirectories(path, size))
+
+  const output = GenerateOutputPaths(sizedDirectories);
+  const files = GenerateOutputFiles(path, output, mimetypes)
+  .map(file => new URL(file));
   return files;
 }
 
-export function ConvertAll(images: Array<string | Entries>) {
+export function ConvertAll(images: Array<Entries>) {
   images.forEach((image) => {
-    const path = (image as Entries)?.path.pathname ?? image;
-    const output = Prepare(path);
-    output?.forEach(async (newFile) => await Convert(path, newFile));
+    const output = Prepare(image.path);
+    output.forEach(async (newFile) => await Convert(image.path, newFile));
   });
 }
