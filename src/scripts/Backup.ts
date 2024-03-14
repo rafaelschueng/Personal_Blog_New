@@ -1,23 +1,24 @@
 import { BasePath, MakeDirectory } from "site/scripts/Utils.ts";
 import { Entries } from "site/scripts/Find.ts";
 
-function IsNotABackup (file: URL, destiny: URL) {
-  return !file.toString().includes(destiny.toString())
+const IsNotABackup = (file: URL, destiny: URL) => {
+  return !file.toString().includes(destiny.toString());
+};
+
+export function PreserveFiles(files: Array<Entries>, backupDirectory: URL | string): FileBackupPlainning[] {
+  const plainnings = files
+    .map((file) => BackupPlainning(file, backupDirectory))
+    .filter((plainning) => IsNotABackup(plainning.files.origin, plainning.paths.backup));
+
+  plainnings.forEach((file) => BackupFile(file.files.origin, file.files.backup, file.paths.backup));
+
+  return plainnings;
 }
 
-export function PreserveFiles(files: Array<Entries>, backupDirectory: URL | string) {
-
-  let plainnings = files.map(file => BackupPlainning(file, backupDirectory))
-  plainnings = plainnings.filter(plainning => IsNotABackup(plainning.files.origin, plainning.paths.backup))
-  plainnings.forEach(file => BackupFile(file.files.origin, file.files.backup, file.paths.backup))
-  
-  return plainnings
-}
-
-export function BackupFile(filePath: URL, fileBackup:URL, destiny: URL) {
+export function BackupFile(filePath: URL, fileBackup: URL, destiny: URL) {
   MakeDirectory(destiny);
-  console.log(`Copying file: ${filePath} to ${fileBackup} in path $: ${destiny}`)
-  Deno.copyFileSync(filePath, fileBackup)
+  console.log(`Copying file: ${filePath} to ${fileBackup} in path $: ${destiny}`);
+  Deno.copyFileSync(filePath, fileBackup);
 }
 
 function AddSlashAtEnd(path: URL | string): string {
@@ -62,7 +63,6 @@ function PlanBackupDirectory(workspace: URL, destiny: URL | string): URL {
   return new URL(`${_workspace}${_destiny}`);
 }
 
-
 function PlanBackupFile(workspace: URL, destiny: URL | string, filename: string): URL {
   //if the destiny is a URI, returns the destiny concatened with file.
   //otherwise, returns the workspace, destiny and file concatened
@@ -70,9 +70,9 @@ function PlanBackupFile(workspace: URL, destiny: URL | string, filename: string)
   const isUri = IsUri(_destiny);
   if (isUri) {
     _destiny = AddSlashAtEnd(_destiny);
-    const names = ExtractFolderNames(workspace)
-    const customFolder = AddSlashAtEnd(names[names.length - 1])
-    _destiny = _destiny += customFolder
+    const names = ExtractFolderNames(workspace);
+    const customFolder = AddSlashAtEnd(names[names.length - 1]);
+    _destiny = _destiny += customFolder;
     return new URL(`${_destiny}${filename}`);
   }
   _destiny = destiny.toString().split("./")[1];
@@ -81,32 +81,31 @@ function PlanBackupFile(workspace: URL, destiny: URL | string, filename: string)
   return new URL(`${_workspace}${_destiny}${filename}`);
 }
 
-interface NonExistentFile {
+export interface FileBackupPlainning {
   name: string;
   paths: { origin: URL; backup: URL };
-  files: { origin: URL; backup: URL };
+  files: { origin: URL; backup: URL; };
 }
 
-function BackupPlainning (file: Entries, destiny: string | URL): NonExistentFile {
+function BackupPlainning(file: Entries, destiny: string | URL): FileBackupPlainning {
   const originPath = BasePath(file.path);
-    const backupPath = PlanBackupDirectory(originPath, destiny);
-    const originFile = file.path // replace by file.path
-    const backupFile = PlanBackupFile(originPath, destiny, file.name);
-    const _file = {
-      name: file.name,
-      paths: { origin: originPath, backup: backupPath },
-      files: { origin: originFile, backup: backupFile },
-    };
-    return _file;
+  const backupPath = PlanBackupDirectory(originPath, destiny);
+  const originFile = file.path;
+  const backupFile = PlanBackupFile(originPath, destiny, file.name);
+  const _file: FileBackupPlainning = {
+    name: file.name,
+    paths: { origin: originPath, backup: backupPath },
+    files: { origin: originFile, backup: backupFile },
+  };
+  return _file;
 }
 
-
-function MakeBackupFolders(plainnings: NonExistentFile[]) {
+function MakeBackupFolders(plainnings: FileBackupPlainning[]) {
   let distincts = plainnings.map((planning) => planning.paths.backup.toString());
   distincts = Array.from(new Set(distincts));
   const folders = distincts.map((path) => new URL(path));
   const newFolders = folders.map((_folder) => MakeDirectory(_folder));
-  return newFolders
+  return newFolders;
 }
 
 /** Makes a recursive backup

@@ -46,5 +46,21 @@
         "path": "/testing/images/profile/profile_animated.gif",
         "md5": "4b5293dfbb8fdf813c97657939bc3d8a",
         "conversions": []
+    },
+    {
+        "name": "personal_logo_wide_optimized-small.avif",
+        "path": "/testing/images/logos/personal_logo_wide_optimized-small.avif",
+        "md5": "d41d8cd98f00b204e9800998ecf8427e",
+        "conversions": [
+            "file:///C:/Users/rafae/Projects/Personal_Blog_New/testing/backup/logos/personal_logo_wide_optimized-small.avif"
+        ]
+    },
+    {
+        "name": "profile-large.webp",
+        "path": "/testing/images/profile/profile-large.webp",
+        "md5": "55a4e8ac67fd4775580a5032e830e92a",
+        "conversions": [
+            "file:///C:/Users/rafae/Projects/Personal_Blog_New/testing/backup/profile/profile-large.webp"
+        ]
     }
 ]

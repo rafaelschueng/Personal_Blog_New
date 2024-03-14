@@ -48,7 +48,7 @@ export function AppendDirectories(path: URL, toBeAppended: URL) {
   return new URL(`file:${joinedFilePath}`)
 }
 
-export async function CreateHashFromFile(path: string | URL) {
+export async function CreateHashFromFile(path: URL) {
   const file = await Deno.open(path, { read: true });
   const stream = file.readable;
   const digest = await crypto.subtle.digest("MD5", stream);
@@ -102,4 +102,12 @@ export function IsFileSystemURI (path: URL) {
   const startsWithFileProtocol = path.protocol.startsWith('file:');
   if(!containsProtocol) throw new Error('Is not a filesystem URI!')
   if(!startsWithFileProtocol) throw new Error('Isnt file or contains a file protocol on URI!')
+}
+
+export function ExtractMimetype (file: URL): string {
+  const _file = file.toString()
+  const regex = /\.\w{3,5}$|\.\w{3,5}\/$/g;
+  let result = _file.match(regex)?.[0] || ''
+  result = result.split('.')[1]
+  return result
 }

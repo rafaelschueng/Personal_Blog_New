@@ -1,7 +1,9 @@
 import { Entries, FindByName } from "./Find.ts";
 import { ExecCommandAsync } from "./Commands.ts";
-import { BasePath, MakeDirectory, AppendDirectories } from "site/scripts/Utils.ts";
+import { AppendDirectories, BasePath, MakeDirectory } from "site/scripts/Utils.ts";
 import { existsSync } from "deno/fs/mod.ts";
+import { FileBackupPlainning } from "site/scripts/Backup.ts";
+import { ConvertAllUsingWASM, ConvertUsingWASM, IMagickArguments } from "site/scripts/ImageMagickWasm.ts";
 
 export async function Dependencies() {
   const tools = [
@@ -43,28 +45,13 @@ export async function Info(path: string) {
 export async function Convert(inputImage: URL, outputImage: URL) {
   const imagemagick = await ImageMagick();
   console.log(`Converting ${inputImage} to ${outputImage}`);
-  const command = await ExecCommandAsync(imagemagick.path, ["convert", inputImage.href, "-auto-orient", outputImage.href]);
+  const command = await ExecCommandAsync(imagemagick.path, [
+    "convert",
+    inputImage.href,
+    "-auto-orient",
+    outputImage.href,
+  ]);
   console.log(command);
-}
-
-export function ChangeMimeType(file: string, mimetype: string): string {
-  if (!mimetype.startsWith(".")) throw new Error("Mimetype argument not starts with dot!");
-  const _file = file;
-  const pattern = /\.\w{3,5}$|\.\w{3,5}\/$/g;
-  if (!pattern.test(_file)) throw new Error(`The ${file} is not a complete path of file!`);
-  const result = _file.replace(pattern, mimetype);
-  return result
-}
-
-function GenerateOutputFiles(path: URL, destinations: Array<URL>, mimetypes: Array<string>) {
-  const newFiles = destinations.map((directory) => {
-    const _$ = path.href.split("/");
-    const name = _$[_$.length - 1];
-    const file = (directory as URL)?.pathname?.concat(name) ?? directory.toString().concat(name);
-    return mimetypes.map((mimetype) => ChangeMimeType(file, mimetype));
-  }).flat();
-
-  return newFiles;
 }
 
 function GenerateOutputPaths(paths: Array<URL>) {
@@ -94,23 +81,97 @@ function ValidateFileCreation(files: Array<string>) {
   }
 }
 
-
-// add capability to avoid replicate /small inside /small again and etc...
-function Prepare(path: URL): URL[] {
-  const mimetypes = [".webp", ".avif"];
-  const sizedDirectories = ["small", "medium", "large"].map(size => new URL(`file:${path.href}/${size}`))
-  //will be removed!
-  const backupDirectories = sizedDirectories.map(size => AppendDirectories(path, size))
-
-  const output = GenerateOutputPaths(sizedDirectories);
-  const files = GenerateOutputFiles(path, output, mimetypes)
-  .map(file => new URL(file));
-  return files;
+export interface Plainning {
+  file: URL;
+  source: URL;
+  commands: IMagickArguments;
 }
 
-export function ConvertAll(images: Array<Entries>) {
-  images.forEach((image) => {
-    const output = Prepare(image.path);
-    output.forEach(async (newFile) => await Convert(image.path, newFile));
-  });
+interface FileConversionPlainning {
+  planning: Plainning[];
+
+  backup: FileBackupPlainning;
+}
+
+function ConversionMimetypes() {
+  return [".webp", ".avif"];
+}
+
+function ConversionSizes() {
+  const sizes = [
+    {
+      suffix: "-small",
+      folder: "small",
+      magick: {
+        resize: 0.25,
+      },
+    },
+    {
+      suffix: "-medium",
+      folder: "medium",
+      magick: {
+        resize: 0.50,
+      },
+    },
+    {
+      suffix: "-large",
+      folder: "large",
+      magick: {
+        resize: 1.0,
+      },
+    },
+  ];
+  return sizes;
+}
+
+export function ReplaceMimetype(file: URL, mimetype: string): URL {
+  if (!mimetype.startsWith(".")) throw new Error("Mimetype argument not starts with dot!");
+  const _file = file.toString();
+  const pattern = /\.\w{3,5}$|\.\w{3,5}\/$/g;
+  if (!pattern.test(_file)) throw new Error(`The ${file} is not a complete path of file!`);
+  const result = _file.replace(pattern, mimetype);
+  return new URL(result);
+}
+
+function AddSuffix(file: URL, suffix: string) {
+  let [_file, _mimetype] = file.toString().split(".");
+  _mimetype = `.${_mimetype}`;
+  _file = _file += suffix;
+  _file = _file += _mimetype;
+  return new URL(_file);
+}
+
+function ConversionAndResizingPlanning(image: FileBackupPlainning): FileConversionPlainning {
+  const mimetypes = ConversionMimetypes();
+  const _file = image.files.origin;
+  const files = mimetypes.map((mimetype) => ReplaceMimetype(_file, mimetype));
+  const sizes = ConversionSizes();
+
+  //must return resizing imagemagick command with folder
+  const plannings = files.map((file) =>
+    sizes.map((size) => {
+      const newFiles = AddSuffix(file, size.suffix);
+      return {
+        file: newFiles,
+        commands: { resize: size.magick.resize },
+        source: _file,
+      };
+    })
+  ).flat();
+  const conversion = { planning: plannings, backup: image };
+  return conversion;
+}
+
+async function ConvertAll(files: FileConversionPlainning[]) {
+  const plainnings = files
+    .map((file) => file.planning)
+    .flat()
+    .filter(file => !file.source.toString().endsWith('svg')); // remove this after filter added in function FindAllImages
+  await ConvertAllUsingWASM(plainnings)
+}
+
+export async function ConvertAndResizeBackups(images: Array<FileBackupPlainning>) {
+  const conversions = images.map((image) => ConversionAndResizingPlanning(image));
+  await ConvertAll(conversions);
+  return conversions;
 }
